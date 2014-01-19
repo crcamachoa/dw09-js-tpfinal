@@ -3,7 +3,7 @@ class Servicio {
 	private static $instancia;
 	private $dbh;
 	private $rowPage;
-	private function __construct() {
+	public function __construct() {
 		$rowPage = 3;
 		//include "/bd.php";
 		try {
@@ -17,7 +17,7 @@ class Servicio {
 			die ();
 		}
 	}
-	private function __destruct(){
+	public function __destruct(){
 		$this->dbh = null;
 	}
 	public static function singleton() {
@@ -37,17 +37,6 @@ class Servicio {
 			$query = $this->dbh->prepare ( 'select * from servicios' );
 			$query->execute ();
 			return $query->fetchAll ();
-			//$this->dbh = null;
-		} catch ( PDOException $e ) {
-			$e->getMessage ();
-		}
-	}
-	public function get_servicios_json() {
-		try {
-			//$this->open_conection();
-			$query = $this->dbh->prepare ( 'select * from servicios' );
-			$query->execute ();
-			return json_encode($query->fetchAll ());
 			//$this->dbh = null;
 		} catch ( PDOException $e ) {
 			$e->getMessage ();
