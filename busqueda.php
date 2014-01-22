@@ -32,10 +32,10 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 				<div class="list-group"> 
 
 					<a  id="todos" class="list-group-item active">Cras justo odio</a>
-					<a  class="list-group-item" id="1">Dapibus ac facilisis in</a>
-					<a  class="list-group-item" id ="2">Morbi leo risus</a>
-					<a  class="list-group-item" id= "3">Porta ac consectetur ac</a>
-					<a  class="list-group-item" id="4">Vestibulum at eros</a>
+					<a  id="1" class="list-group-item" >Dapibus ac facilisis in</a>
+					<a  id ="2" class="list-group-item" >Morbi leo risus</a>
+					<a  id= "3"class="list-group-item" >Porta ac consectetur ac</a>
+					<a  id="4" class="list-group-item" >Vestibulum at eros</a>
 
 				</div> 
 			</div>
@@ -47,6 +47,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 							<th>ID</th>
 							<th>NOMBRE</th>
 							<th>APELLIDO</th>
+							<th>TELEFONO</th>
 							<th>EMAIL</th>
 							<th>SERVICIO</th>
 						</tr>
@@ -63,28 +64,19 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 	</div> <!-- /container -->
 
 	<script>
-	$(document).ready(function(){
-		$.ajax({
-			url: 'serviciosListar.php',
-			dataType: 'json',
-			success: function(serviciosList){
-				var servicioListHtml = '';
-				var len = serviciosList.length;
-				for(var i=0;i<len;i++){
-					servicioListHtml += '<a id="' + serviciosList[i].id + '" class="list-group-item">' + serviciosList[i].servicio + "</a>";
-				}
-				$('#servicioListaContainer').html(servicioListHtml);
-			}
-		});
 
-		
-		var evento1= function getServicios()
+		var getServicios= function ()
 		{
-
+			$('.active').attr("class", "list-group-item");
+			$(this).attr("class", "list-group-item active");
 			var ajaxRequest = {};
 			ajaxRequest.url = "getservicios.php";
 			ajaxRequest.type = "GET";
+			if (typeof $(this) === "undefined") {
+    alert("something is undefined");
+}
 			ajaxRequest.data = {servicio : $(this).attr("id")};
+			//ajaxRequest.data = {servicio : "2"};
 			ajaxRequest.success = function(responseJSON) {
            		 // get JSON
            		 var servicios = responseJSON;
@@ -95,6 +87,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
            		 	tabla+="<td>"+servicios[i].id+"</td>";
            		 	tabla+="<td>"+servicios[i].nombre+"</td>";
            		 	tabla+="<td>"+servicios[i].apellido+"</td>";
+           		 	tabla+="<td>"+servicios[i].telefono+"</td>";
            		 	tabla+="<td>"+servicios[i].email+"</td>";
            		 	tabla+="<td>"+servicios[i].servicio+"</td>";
            		 	tabla+="</tr>";
@@ -106,8 +99,22 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
            		$.ajax(ajaxRequest);
            	};
 
-           	$("a").on("click",evento1);
-           });
+		$.ajax({
+			url: 'serviciosListar.php',
+			dataType: 'json',
+			success: function(serviciosList){
+				var servicioListHtml = '';
+				var len = serviciosList.length;
+				servicioListHtml +='<a  id="todos" class="list-group-item active">Todos</a>';
+				for(var i=0;i<len;i++){
+					servicioListHtml += '<a id="' + serviciosList[i].id + '" class="list-group-item">' + serviciosList[i].servicio + "</a>";
+				}
+				$('.list-group').html(servicioListHtml);
+				$('a.list-group-item').on("click",getServicios);
+			}
+		}
+		);
+$(document).ready(getServicios);
 </script>
 </body>
 </html>
