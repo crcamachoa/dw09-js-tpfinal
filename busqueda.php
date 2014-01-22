@@ -114,7 +114,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 			}
 		}
 		);
-$(document).ready(getServicios);
+//$(document).ready(getServicios);
 </script>
 </body>
 </html>
