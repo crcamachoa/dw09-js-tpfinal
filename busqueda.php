@@ -95,7 +95,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
            		 var tabla=""; 
 
            		 for (var i = 0; i < servicios.length; i++) {
-           		 	tabla+='<tr id="B_'+servicios[i].id+'">"';
+           		 	tabla+='<tr id="C_'+servicios[i].id+'">"';
            		 	tabla+="<td>"+servicios[i].id+"</td>";
            		 	tabla+="<td>"+servicios[i].nombre+"</td>";
            		 	tabla+="<td>"+servicios[i].apellido+"</td>";
