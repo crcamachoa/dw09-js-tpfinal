@@ -64,18 +64,34 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 	</div> <!-- /container -->
 
 	<script>
+	var getPersona = function(){
+		$("tr").removeClass("active");
+		$(this).addClass("active")
 
-		var getServicios= function ()
-		{
-			$('.active').attr("class", "list-group-item");
-			$(this).attr("class", "list-group-item active");
-			var ajaxRequest = {};
-			ajaxRequest.url = "getservicios.php";
-			ajaxRequest.type = "GET";
-			if (typeof $(this) === "undefined") {
-    alert("something is undefined");
-}
-			ajaxRequest.data = {servicio : $(this).attr("id")};
+		// var ajaxRequest = {};
+		// ajaxRequest.url = "getPersona.php";
+		// ajaxRequest.type = "GET";
+		// var text = $(this).attr("id")};
+		// var idpersona= text.slice(2);
+		// ajaxRequest.data = {persona : idepersona};
+		// ajaxRequest.success =function(PersonaJson){
+		// 	var persona = PersonaJson;
+		// 	alert(persona[0].id);
+		// }
+		// $.ajax(ajaxRequest);
+	};
+
+
+
+	var getServicios= function ()
+	{
+		$('.active').attr("class", "list-group-item");
+		$(this).attr("class", "list-group-item active");
+		var ajaxRequest = {};
+		ajaxRequest.url = "getservicios.php";
+		ajaxRequest.type = "GET";
+
+		ajaxRequest.data = {servicio : $(this).attr("id")};
 			//ajaxRequest.data = {servicio : "2"};
 			ajaxRequest.success = function(responseJSON) {
            		 // get JSON
@@ -83,7 +99,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
            		 var tabla=""; 
 
            		 for (var i = 0; i < servicios.length; i++) {
-           		 	tabla+="<tr>";
+           		 	tabla+='<tr id="B_'+servicios[i].id+'">"';
            		 	tabla+="<td>"+servicios[i].id+"</td>";
            		 	tabla+="<td>"+servicios[i].nombre+"</td>";
            		 	tabla+="<td>"+servicios[i].apellido+"</td>";
@@ -92,28 +108,31 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
            		 	tabla+="<td>"+servicios[i].servicio+"</td>";
            		 	tabla+="</tr>";
            		 };
+
            		 $("tbody").html(tabla);
+				//Para colorear lo que se clickea
+				$("tr").on("click", getPersona);
 
-           		}
+			};
+					$.ajax(ajaxRequest);
 
-           		$.ajax(ajaxRequest);
-           	};
+	};
 
-		$.ajax({
-			url: 'serviciosListar.php',
-			dataType: 'json',
-			success: function(serviciosList){
-				var servicioListHtml = '';
-				var len = serviciosList.length;
-				servicioListHtml +='<a  id="todos" class="list-group-item active">Todos</a>';
-				for(var i=0;i<len;i++){
-					servicioListHtml += '<a id="' + serviciosList[i].id + '" class="list-group-item">' + serviciosList[i].servicio + "</a>";
-				}
-				$('.list-group').html(servicioListHtml);
-				$('a.list-group-item').on("click",getServicios);
-			}
+$.ajax({
+	url: 'serviciosListar.php',
+	dataType: 'json',
+	success: function(serviciosList){
+		var servicioListHtml = '';
+		var len = serviciosList.length;
+		servicioListHtml +='<a  id="todos" class="list-group-item active">Todos</a>';
+		for(var i=0;i<len;i++){
+			servicioListHtml += '<a id="' + serviciosList[i].id + '" class="list-group-item">' + serviciosList[i].servicio + "</a>";
 		}
-		);
+		$('.list-group').html(servicioListHtml);
+		$('a.list-group-item').on("click",getServicios);
+	}
+}
+);
 //$(document).ready(getServicios);
 </script>
 </body>
