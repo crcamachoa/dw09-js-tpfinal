@@ -68,17 +68,17 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 		$("tr").removeClass("active");
 		$(this).addClass("active")
 
-		// var ajaxRequest = {};
-		// ajaxRequest.url = "getPersona.php";
-		// ajaxRequest.type = "GET";
-		// var text = $(this).attr("id")};
-		// var idpersona= text.slice(2);
-		// ajaxRequest.data = {persona : idepersona};
-		// ajaxRequest.success =function(PersonaJson){
-		// 	var persona = PersonaJson;
-		// 	alert(persona[0].id);
-		// }
-		// $.ajax(ajaxRequest);
+		 var ajaxRequest = {};
+		 ajaxRequest.url = "getPersona.php";
+		 ajaxRequest.type = "GET";
+		 var text = $(this).attr("id");
+		 var id_persona= text.slice(2);
+		 ajaxRequest.data = {persona : id_persona};
+		 ajaxRequest.success =function(PersonaJson){
+		 	var persona = PersonaJson;
+		 	alert(persona[0].nombre.trim()+" "+persona[0].apellido);
+		 };
+		 $.ajax(ajaxRequest);
 	};
 
 
