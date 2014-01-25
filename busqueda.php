@@ -150,5 +150,14 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 		);
 		$(document).ready(getServiciosOnLoad);
 		</script>
+<!-- SCRIPT PARA EL FILTRO DE BUSQUEDA -->            
+                    <script src="jquery.table-filter.min.js"></script>
+                    <script type="text/javascript">
+                      $(function () {
+                        $("table").addTableFilter();
+                      });
+                    </script>    
+<!-- FIN DEL SCRIPT DE BUSQUEDA -->                    
+
 	</body>
 	</html>
