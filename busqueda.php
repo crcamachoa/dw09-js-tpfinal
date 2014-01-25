@@ -57,36 +57,41 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 					</tbody>
 				</table>
 			</div>
+
+			<!-- ZONA D! -->
 			<div id="contactoPerfilContainer" class="col-md-8">
 				<div class="row">
 					<div class="col-sm-6 col-md-4">
 						<div class="thumbnail">
-							<img src="photos/1.jpg" alt="...">
+							<!-- Acá se cargan las imagenes -->
+							<img id="pulgarcito" src="" alt="...">
 							<div class="caption">
 								<h3>Datos de Contacto</h3>
 								
-									
-										<p>Nombre <p id="nombre">Alain</p></p>
-										
-									<br>
-									
-										<p>Apellido</p>
-										<p id="apellido">Loup</p>
-									<br>
-									
-										<p>email</p>
-										<p id="email">alainloup@gmail.com</p>
-									<br>
-									
-										<p>Servicios</p>
-										<p id="servicios"></p>
-									<br>
-					
+
+								<p>Nombre </p>
+								<p id="nombre"></p>
+
+								<br>
+
+								<p>Apellido</p>
+								<p id="apellido"></p>
+								<br>
+
+								<p>email</p>
+								<p id="email"></p>
+								<br>
+
+								<p></p>
+								<p id="servicios"></p>
+								<br>
+
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<!-- FIN DE ZONA D! -->
 		</div>
 	</div> <!-- /container -->
 
@@ -94,20 +99,34 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 	var getPersona = function(){
 		$("tr").removeClass("active");
 		$(this).addClass("active")
-
+		var text = $(this).attr("id");
 		var ajaxRequest = {};
 		ajaxRequest.url = "getPersona.php";
 		ajaxRequest.type = "GET";
-		var text = $(this).attr("id");
+		
 		var id_persona= text.slice(2);
 		ajaxRequest.data = {persona : id_persona};
 		ajaxRequest.success =function(PersonaJson){
 			var persona = PersonaJson;
 		 	//Usar para D
-		 	alert(persona[0].nombre.trim()+" "+persona[0].apellido);
-		 };
-		 $.ajax(ajaxRequest);
+		 	//Las fotos se guardan en la carper photos/#.jpg, donde # es el ID del usuario
+		 	var foto = "photos/"+persona[0].id+".jpg";
+		 	//Se le asigna el atributo src a la foto con el id del clickeado
+		 	$("#pulgarcito").attr("src",foto);
+
+		 	$("#nombre").html(persona[0].nombre.trim());
+		 	$("#apellido").html(persona[0].apellido.trim());
+		 	$("#email").html(persona[0].email.trim());
+		 	var losservicios=persona[0].servicio.trim();
+		 	
+			//para concatenar todos los servicios ofrecidos si llegan varios
+			for (var i = 1; i < persona.length; i++) {
+				losservicios+=", "+persona[i].servicio.trim()
+			};
+			$("#servicios").html(losservicios);
 		};
+$.ajax(ajaxRequest);
+};
 //llama al ajax de un servicio especifico
 var llamarAjaxServicio = function(cualServicio){
 	var ajaxRequest = {};
