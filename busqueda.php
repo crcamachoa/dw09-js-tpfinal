@@ -88,7 +88,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 			ajaxRequest.type = "GET";
 
 			ajaxRequest.data = {servicio : cualServicio};
-			//ajaxRequest.data = {servicio : "2"};
+
 			ajaxRequest.success = function(responseJSON) {
            		 // get JSON
            		 var servicios = responseJSON;
