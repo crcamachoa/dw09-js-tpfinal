@@ -39,7 +39,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 
 				</div> 
 			</div>
-			<div id="contactoTablaContainer" class="col-md-8">
+			<div id="contactoTablaContainer" class="col-md-6">
 				<table id="tableFilter" class="table table-striped table-bordered">
 					<!--                 <table id="tableFilter" class="table table-striped table-hover table-condensed"> -->
 					<thead>
@@ -52,13 +52,40 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 							<th>SERVICIO</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="tbody">
 
 					</tbody>
 				</table>
 			</div>
-			<div id="contactoPerfilContainer" class="col-md-2">
-				Datos de un contacto
+			<div id="contactoPerfilContainer" class="col-md-8">
+				<div class="row">
+					<div class="col-sm-6 col-md-4">
+						<div class="thumbnail">
+							<img src="photos/1.jpg" alt="...">
+							<div class="caption">
+								<h3>Datos de Contacto</h3>
+								
+									
+										<p>Nombre <p id="nombre">Alain</p></p>
+										
+									<br>
+									
+										<p>Apellido</p>
+										<p id="apellido">Loup</p>
+									<br>
+									
+										<p>email</p>
+										<p id="email">alainloup@gmail.com</p>
+									<br>
+									
+										<p>Servicios</p>
+										<p id="servicios"></p>
+									<br>
+					
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div> <!-- /container -->
@@ -82,14 +109,14 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 		 $.ajax(ajaxRequest);
 		};
 //llama al ajax de un servicio especifico
-		var llamarAjaxServicio = function(cualServicio){
-			var ajaxRequest = {};
-			ajaxRequest.url = "getservicios.php";
-			ajaxRequest.type = "GET";
+var llamarAjaxServicio = function(cualServicio){
+	var ajaxRequest = {};
+	ajaxRequest.url = "getservicios.php";
+	ajaxRequest.type = "GET";
 
-			ajaxRequest.data = {servicio : cualServicio};
+	ajaxRequest.data = {servicio : cualServicio};
 
-			ajaxRequest.success = function(responseJSON) {
+	ajaxRequest.success = function(responseJSON) {
            		 // get JSON
            		 var servicios = responseJSON;
            		 var tabla=""; 
@@ -105,7 +132,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
            		 	tabla+="</tr>";
            		 };
 
-           		 $("tbody").html(tabla);
+           		 $("tbody.tbody").html(tabla);
 				//Para colorear lo que se clickea
 				$("tr").on("click", getPersona);
 
@@ -126,38 +153,38 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 		};
 
 //para que se popule con todos los servicios al iniciar
-		var getServiciosOnLoad= function ()
-		{
+var getServiciosOnLoad= function ()
+{
 
-			llamarAjaxServicio("todos");
+	llamarAjaxServicio("todos");
 
-		};
+};
 
-		$.ajax({
-			url: 'serviciosListar.php',
-			dataType: 'json',
-			success: function(serviciosList){
-				var servicioListHtml = '';
-				var len = serviciosList.length;
-				servicioListHtml +='<a  id="todos" class="list-group-item active">Todos</a>';
-				for(var i=0;i<len;i++){
-					servicioListHtml += '<a id="' + serviciosList[i].id + '" class="list-group-item">' + serviciosList[i].servicio + "</a>";
-				}
-				$('.list-group').html(servicioListHtml);
-				$('a.list-group-item').on("click",getServicios);
-			}
+$.ajax({
+	url: 'serviciosListar.php',
+	dataType: 'json',
+	success: function(serviciosList){
+		var servicioListHtml = '';
+		var len = serviciosList.length;
+		servicioListHtml +='<a  id="todos" class="list-group-item active">Todos</a>';
+		for(var i=0;i<len;i++){
+			servicioListHtml += '<a id="' + serviciosList[i].id + '" class="list-group-item">' + serviciosList[i].servicio + "</a>";
 		}
-		);
-		$(document).ready(getServiciosOnLoad);
-		</script>
+		$('.list-group').html(servicioListHtml);
+		$('a.list-group-item').on("click",getServicios);
+	}
+}
+);
+$(document).ready(getServiciosOnLoad);
+</script>
 <!-- SCRIPT PARA EL FILTRO DE BUSQUEDA -->            
-                    <script src="js/jquery.table-filter.min.js"></script>
-                    <script type="text/javascript">
-                      $(function () {
-                        $("table").addTableFilter();
-                      });
-                    </script>    
+<script src="js/jquery.table-filter.min.js"></script>
+<script type="text/javascript">
+$(function () {
+	$("table").addTableFilter();
+});
+</script>    
 <!-- FIN DEL SCRIPT DE BUSQUEDA -->                    
 
-	</body>
-	</html>
+</body>
+</html>
