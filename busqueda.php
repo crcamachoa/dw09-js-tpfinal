@@ -31,15 +31,10 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 			<div id="servicioListaContainer" class="col-md-2">
 				<div class="list-group"> 
 
-					<a  id="todos" class="list-group-item active">Cras justo odio</a>
-					<a  id="1" class="list-group-item" >Dapibus ac facilisis in</a>
-					<a  id ="2" class="list-group-item" >Morbi leo risus</a>
-					<a  id= "3"class="list-group-item" >Porta ac consectetur ac</a>
-					<a  id="4" class="list-group-item" >Vestibulum at eros</a>
 
 				</div> 
 			</div>
-			<div id="contactoTablaContainer" class="col-md-6">
+			<div id="contactoTablaContainer" class="col-md-7">
 				<table id="tableFilter" class="table table-striped table-bordered">
 					<!--                 <table id="tableFilter" class="table table-striped table-hover table-condensed"> -->
 					<thead>
@@ -59,36 +54,40 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 			</div>
 
 			<!-- ZONA D! -->
-			<div id="contactoPerfilContainer" class="col-md-8">
+			<div id="contactoPerfilContainer" class="col-md-3">
 				<div class="row">
-					<div class="col-sm-6 col-md-4">
+<!--					<div class="col-sm-6 col-md-6">-->
 						<div class="thumbnail">
 							<!-- Acá se cargan las imagenes -->
 							<img id="pulgarcito" src="" alt="...">
 							<div class="caption">
 								<h3>Datos de Contacto</h3>
-								
-
-								<p>Nombre </p>
-								<p id="nombre"></p>
-
-								<br>
-
-								<p>Apellido</p>
-								<p id="apellido"></p>
-								<br>
-
-								<p>email</p>
-								<p id="email"></p>
-								<br>
-
-								<p></p>
+                                <table>
+                                <tr>                            
+                                <td>Nombre:</td>
+								<td id="nombre"></td>                                
+                                </tr>
+                                <tr>                            
+                                <td>Apellido:</td>
+								<td id="apellido"></td>                                
+                                </tr>
+                                <tr>                            
+                                <td>Email:</td>
+								<td id="email"></td>                                
+                                </tr>
+                                <tr>                            
+                                <td>Telefono:</td>
+								<td id="telefono"></td>                                
+                                </tr>
+                                </table>
+                                <br>
+								<span>Servicios:</span>
 								<p id="servicios"></p>
 								<br>
 
 							</div>
 						</div>
-					</div>
+<!--					</div>-->
 				</div>
 			</div>
 			<!-- FIN DE ZONA D! -->
@@ -97,6 +96,9 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 
 	<script>
 	var getPersona = function(){
+        
+        $('#contactoPerfilContainer').show(); // Muestra el div detalle (Zona D)
+        
 		$("tr").removeClass("active");
 		$(this).addClass("active")
 		var text = $(this).attr("id");
@@ -117,6 +119,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 		 	$("#nombre").html(persona[0].nombre.trim());
 		 	$("#apellido").html(persona[0].apellido.trim());
 		 	$("#email").html(persona[0].email.trim());
+            $("#telefono").html(persona[0].telefono.trim());
 		 	var losservicios=persona[0].servicio.trim();
 		 	
 			//para concatenar todos los servicios ofrecidos si llegan varios
@@ -161,9 +164,15 @@ var llamarAjaxServicio = function(cualServicio){
 		//para traiga los servicios del que se clicko
 		var getServicios= function ()
 		{
+            
+             $('#contactoPerfilContainer').hide(); // oculta la zona D
+            
 			//para activar y desactivar los botones
 			$('.active').attr("class", "list-group-item");
 			$(this).attr("class", "list-group-item active");
+            $('#tableFilter-filtering').val('');
+            
+            
 
 			llamarAjaxServicio($(this).attr("id"));
 
@@ -176,6 +185,7 @@ var getServiciosOnLoad= function ()
 {
 
 	llamarAjaxServicio("todos");
+    $('#contactoPerfilContainer').hide();
 
 };
 
@@ -197,10 +207,10 @@ $.ajax({
 $(document).ready(getServiciosOnLoad);
 </script>
 <!-- SCRIPT PARA EL FILTRO DE BUSQUEDA -->            
-<script src="js/jquery.table-filter.min.js"></script>
+<script src="js/jquery.table-filter.js"></script>
 <script type="text/javascript">
 $(function () {
-	$("table").addTableFilter();
+	$("#tableFilter").addTableFilter();
 });
 </script>    
 <!-- FIN DEL SCRIPT DE BUSQUEDA -->                    
