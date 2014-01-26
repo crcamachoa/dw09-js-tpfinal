@@ -1728,7 +1728,8 @@ table th[class*="col-"] {
 .table > thead > tr.active > th,
 .table > tbody > tr.active > th,
 .table > tfoot > tr.active > th {
-  background-color: #f5f5f5;
+  background-color: #428bca;
+  color:white;    
 }
 
 .table > thead > tr > td.success,

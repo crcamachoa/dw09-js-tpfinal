@@ -38,14 +38,14 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 				<table id="tableFilter" class="table table-striped table-bordered">
 					<!--                 <table id="tableFilter" class="table table-striped table-hover table-condensed"> -->
 					<thead>
-						<tr >
+						
 							<th>ID</th>
 							<th>NOMBRE</th>
 							<th>APELLIDO</th>
 							<th>TELEFONO</th>
 							<th>EMAIL</th>
 							<th>SERVICIO</th>
-						</tr>
+						
 					</thead>
 					<tbody class="tbody">
 
@@ -156,7 +156,7 @@ var llamarAjaxServicio = function(cualServicio){
 
            		 $("tbody.tbody").html(tabla);
 				//Para colorear lo que se clickea
-				$("tr").on("click", getPersona);
+				$("tbody tr").on("click", getPersona);
 
 			};
 			$.ajax(ajaxRequest);
@@ -168,7 +168,7 @@ var llamarAjaxServicio = function(cualServicio){
              $('#contactoPerfilContainer').hide(); // oculta la zona D
             
 			//para activar y desactivar los botones
-			$('.active').attr("class", "list-group-item");
+			$('a.active').attr("class", "list-group-item");
 			$(this).attr("class", "list-group-item active");
             $('#tableFilter-filtering').val('');
             

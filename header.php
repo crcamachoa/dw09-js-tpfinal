@@ -22,6 +22,7 @@ $rubro_list = array("list_view.php", "index.php"); //Sitios relacionados con Rub
 $servicio_list = array("list_view_servicio.php", "buscaservicio.php");//Sitios relacionados con servicios (no de admin) 
 $contacto_list = array("list_viewcontacto.php", "buscacontacto.php");//Sitios relacionados con contacto (no de admin) 
 $editar_list = array("contacto.php", "lista_servicios.php","lista_rubros.php", "lista_usuarios.php", "edit_usuario.php", "usuarios.php", "edit_servicio.php","servicios.php", "edit_rubro.php", "rubros.php", "cambiar_pass.php" ); 
+$busqueda_list = array("busqueda.php");
   
 //Se obtiene la pagina actual 
 $pagina_actual = basename($_SERVER['PHP_SELF']); 
@@ -35,6 +36,9 @@ elseif(in_array($pagina_actual, $servicio_list)){
 } 
 elseif(in_array($pagina_actual, $contacto_list)){ 
   $activo='Contacto'; 
+} 
+elseif(in_array($pagina_actual, $busqueda.php)){ 
+  $activo='Busqueda'; 
 } 
 else
   $activo='Editar'; 
@@ -50,10 +54,13 @@ if(!isset($_SESSION['nombre']) )
      <li <?php  if($activo == 'Contacto' )  echo 'class="active"';?>> 
           <a href="buscacontacto.php">Contacto</a> 
       </li> 
+
       <li <?php  if($activo == 'Servicio' )  echo 'class="active"';?>> 
         <a href="buscaservicio.php">Servicio</a> 
       </li> 
-  
+     <li <?php  if($activo == 'Busqueda' )  echo 'class="active"';?>> 
+          <a href="busqueda.php">Busqueda</a> 
+      </li>   
       </ul> 
       
          <form class="navbar-form navbar-right" method="POST" action=""> 
@@ -79,6 +86,9 @@ else
         </li> 
         <li <?php  if($activo == 'Servicio')  echo 'class="active"';?>> 
             <a href="buscaservicio.php">Servicio</a> 
+        </li> 
+        <li <?php  if($activo == 'Busqueda')  echo 'class="active"';?>> 
+            <a href="busqueda.php">Busqueda</a> 
         </li> 
          <li <?php  if($activo == 'Editar')  echo 'class="active"';?>> 
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Administrar</a> 

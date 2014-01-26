@@ -40,9 +40,10 @@
       $("<p/>").addClass("formTableFilter").append(label).append(input).insertBefore(this);
 
       // Bind filtering function
-      $("#" + id).delayBind("keyup", function (e) {
+      $("#" + id).delayBind("keydown", function (e) {
           
-   //     $('#contactoPerfilContainer').hide(); // oculta la zona D
+        $('#contactoPerfilContainer').hide(); // oculta la zona D
+        $("tr").removeClass("active");
           
         var words = $(this).val().toLowerCase().split(" ");
         $("#" + tgt + " tbody tr").each(function () {
