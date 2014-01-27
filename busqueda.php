@@ -156,6 +156,8 @@ var llamarAjaxServicio = function(cualServicio){
 
            		 $("tbody.tbody").html(tabla);
 				//Para colorear lo que se clickea
+				$("tbody tr").css('cursor','pointer');
+
 				$("tbody tr").on("click", getPersona);
 
 			};
@@ -199,8 +201,13 @@ $.ajax({
 		for(var i=0;i<len;i++){
 			servicioListHtml += '<a id="' + serviciosList[i].id + '" class="list-group-item">' + serviciosList[i].servicio + "</a>";
 		}
+
+		//Para completar la zona A
 		$('.list-group').html(servicioListHtml);
+		//Para que se llame a getservicios cada vez que se clickea en la zona A
 		$('a.list-group-item').on("click",getServicios);
+		//para mostrar el puntero
+		$('a.list-group-item').css("cursor","pointer");
 	}
 }
 );

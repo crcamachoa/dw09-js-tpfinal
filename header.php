@@ -37,7 +37,7 @@ elseif(in_array($pagina_actual, $servicio_list)){
 elseif(in_array($pagina_actual, $contacto_list)){ 
   $activo='Contacto'; 
 } 
-elseif(in_array($pagina_actual, $busqueda.php)){ 
+elseif(in_array($pagina_actual, $busqueda_list)){ 
   $activo='Busqueda'; 
 } 
 else
