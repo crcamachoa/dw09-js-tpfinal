@@ -62,24 +62,24 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 								<h3>Datos de Contacto</h3>
                                 <table>
                                 <tr>                            
-                                <td>Nombre:</td>
+                                <td><b>Nombre:</b></td>
 								<td id="nombre"></td>                                
                                 </tr>
                                 <tr>                            
-                                <td>Apellido:</td>
+                                <td><b>Apellido:</b></td>
 								<td id="apellido"></td>                                
                                 </tr>
                                 <tr>                            
-                                <td>Email:</td>
+                                <td><b>Email:</b></td>
 								<td id="email"></td>                                
                                 </tr>
                                 <tr>                            
-                                <td>Telefono:</td>
+                                <td><b>Telefono:</b></td>
 								<td id="telefono"></td>                                
                                 </tr>
                                 </table>
                                 <br>
-								<span>Servicios:</span>
+								<span><b>Servicios:</b></span>
 								<p id="servicios"></p>
 								<br>
 
