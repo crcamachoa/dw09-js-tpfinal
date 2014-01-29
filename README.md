@@ -25,4 +25,6 @@ Usuario2: root // Password2: root
 
 - Los archivos complementarios agregados son getcontactos.php, getservicios.php, y servicioslistar.php
 
+-Directorio con las fotos es photos
+
 - Utilizamos un plugin para el filtrado, que se encuentra en js/jquery.table-filter.js
