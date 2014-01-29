@@ -1,0 +1,927 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.2.2
+-- Dumped by pg_dump version 9.2.2
+-- Started on 2014-01-29 10:22:35
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 183 (class 3079 OID 11727)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2024 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 168 (class 1259 OID 66262)
+-- Name: contacto; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE contacto (
+    id integer NOT NULL,
+    nombre character(50) NOT NULL,
+    apellido character(50),
+    ci integer,
+    email character varying NOT NULL,
+    telefono character varying,
+    direccion character varying,
+    observacion character(256)
+);
+
+
+ALTER TABLE public.contacto OWNER TO postgres;
+
+--
+-- TOC entry 2025 (class 0 OID 0)
+-- Dependencies: 168
+-- Name: COLUMN contacto.id; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN contacto.id IS 'Contacto Id';
+
+
+--
+-- TOC entry 2026 (class 0 OID 0)
+-- Dependencies: 168
+-- Name: COLUMN contacto.ci; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN contacto.ci IS 'Cedula de Identidad';
+
+
+--
+-- TOC entry 169 (class 1259 OID 66268)
+-- Name: contacto_generico; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE contacto_generico (
+    linea integer NOT NULL,
+    contacto integer NOT NULL,
+    tipo character(15),
+    direccion character(30) NOT NULL
+);
+
+
+ALTER TABLE public.contacto_generico OWNER TO postgres;
+
+--
+-- TOC entry 170 (class 1259 OID 66271)
+-- Name: contacto_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE contacto_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.contacto_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2027 (class 0 OID 0)
+-- Dependencies: 170
+-- Name: contacto_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE contacto_id_seq OWNED BY contacto.id;
+
+
+--
+-- TOC entry 171 (class 1259 OID 66273)
+-- Name: contacto_servicio; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE contacto_servicio (
+    contacto integer NOT NULL,
+    servicio integer NOT NULL
+);
+
+
+ALTER TABLE public.contacto_servicio OWNER TO postgres;
+
+--
+-- TOC entry 172 (class 1259 OID 66276)
+-- Name: direccion; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE direccion (
+    linea integer NOT NULL,
+    contacto integer NOT NULL,
+    direccion character varying(100),
+    tipo character(15)
+);
+
+
+ALTER TABLE public.direccion OWNER TO postgres;
+
+--
+-- TOC entry 173 (class 1259 OID 66279)
+-- Name: documento; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE documento (
+    linea integer NOT NULL,
+    contacto integer NOT NULL,
+    tipo character(15),
+    path character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.documento OWNER TO postgres;
+
+--
+-- TOC entry 174 (class 1259 OID 66282)
+-- Name: rol; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE rol (
+    id integer NOT NULL,
+    nombre character(50) NOT NULL
+);
+
+
+ALTER TABLE public.rol OWNER TO postgres;
+
+--
+-- TOC entry 2028 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: TABLE rol; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE rol IS 'Roles de Usuario';
+
+
+--
+-- TOC entry 2029 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: COLUMN rol.id; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN rol.id IS 'Rol Id';
+
+
+--
+-- TOC entry 2030 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: COLUMN rol.nombre; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN rol.nombre IS 'Nombre del Rol';
+
+
+--
+-- TOC entry 175 (class 1259 OID 66285)
+-- Name: rol_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE rol_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.rol_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2031 (class 0 OID 0)
+-- Dependencies: 175
+-- Name: rol_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE rol_id_seq OWNED BY rol.id;
+
+
+--
+-- TOC entry 176 (class 1259 OID 66287)
+-- Name: rubro; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE rubro (
+    id integer NOT NULL,
+    nombre character(50) NOT NULL
+);
+
+
+ALTER TABLE public.rubro OWNER TO postgres;
+
+--
+-- TOC entry 2032 (class 0 OID 0)
+-- Dependencies: 176
+-- Name: COLUMN rubro.id; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN rubro.id IS 'Rubro Id';
+
+
+--
+-- TOC entry 2033 (class 0 OID 0)
+-- Dependencies: 176
+-- Name: COLUMN rubro.nombre; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN rubro.nombre IS 'Rubro';
+
+
+--
+-- TOC entry 177 (class 1259 OID 66290)
+-- Name: rubro_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE rubro_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.rubro_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2034 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: rubro_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE rubro_id_seq OWNED BY rubro.id;
+
+
+--
+-- TOC entry 178 (class 1259 OID 66292)
+-- Name: servicios; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE servicios (
+    id integer NOT NULL,
+    servicio character(50) NOT NULL,
+    id_rubro integer
+);
+
+
+ALTER TABLE public.servicios OWNER TO postgres;
+
+--
+-- TOC entry 2035 (class 0 OID 0)
+-- Dependencies: 178
+-- Name: COLUMN servicios.id; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN servicios.id IS 'Servicio Id';
+
+
+--
+-- TOC entry 179 (class 1259 OID 66295)
+-- Name: servicios_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE servicios_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.servicios_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2036 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: servicios_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE servicios_id_seq OWNED BY servicios.id;
+
+
+--
+-- TOC entry 180 (class 1259 OID 66297)
+-- Name: telefono; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE telefono (
+    linea integer NOT NULL,
+    contacto integer NOT NULL,
+    telefono character(20) NOT NULL,
+    tipo character(15) NOT NULL
+);
+
+
+ALTER TABLE public.telefono OWNER TO postgres;
+
+--
+-- TOC entry 2037 (class 0 OID 0)
+-- Dependencies: 180
+-- Name: COLUMN telefono.telefono; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN telefono.telefono IS 'telefono';
+
+
+--
+-- TOC entry 2038 (class 0 OID 0)
+-- Dependencies: 180
+-- Name: COLUMN telefono.tipo; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN telefono.tipo IS 'Tipo de Telefono';
+
+
+--
+-- TOC entry 181 (class 1259 OID 66300)
+-- Name: usuario; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE usuario (
+    id integer NOT NULL,
+    usuario character(20) NOT NULL,
+    nombre character(50),
+    apellido character(50) NOT NULL,
+    ci integer,
+    rol integer NOT NULL,
+    password character varying NOT NULL
+);
+
+
+ALTER TABLE public.usuario OWNER TO postgres;
+
+--
+-- TOC entry 2039 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: COLUMN usuario.id; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN usuario.id IS 'Usuario Id';
+
+
+--
+-- TOC entry 2040 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: COLUMN usuario.usuario; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN usuario.usuario IS 'Usuario de Login';
+
+
+--
+-- TOC entry 2041 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: COLUMN usuario.nombre; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN usuario.nombre IS 'Nombre del Usuario';
+
+
+--
+-- TOC entry 2042 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: COLUMN usuario.apellido; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN usuario.apellido IS 'Apellido del Usuario';
+
+
+--
+-- TOC entry 2043 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: COLUMN usuario.ci; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN usuario.ci IS 'Cedula de Identidad';
+
+
+--
+-- TOC entry 2044 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: COLUMN usuario.rol; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN usuario.rol IS 'Rol Id';
+
+
+--
+-- TOC entry 182 (class 1259 OID 66306)
+-- Name: usuario_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE usuario_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.usuario_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2045 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: usuario_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE usuario_id_seq OWNED BY usuario.id;
+
+
+--
+-- TOC entry 1962 (class 2604 OID 66308)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contacto ALTER COLUMN id SET DEFAULT nextval('contacto_id_seq'::regclass);
+
+
+--
+-- TOC entry 1963 (class 2604 OID 66309)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY rol ALTER COLUMN id SET DEFAULT nextval('rol_id_seq'::regclass);
+
+
+--
+-- TOC entry 1964 (class 2604 OID 66310)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY rubro ALTER COLUMN id SET DEFAULT nextval('rubro_id_seq'::regclass);
+
+
+--
+-- TOC entry 1965 (class 2604 OID 66311)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY servicios ALTER COLUMN id SET DEFAULT nextval('servicios_id_seq'::regclass);
+
+
+--
+-- TOC entry 1966 (class 2604 OID 66312)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY usuario ALTER COLUMN id SET DEFAULT nextval('usuario_id_seq'::regclass);
+
+
+--
+-- TOC entry 2002 (class 0 OID 66262)
+-- Dependencies: 168
+-- Data for Name: contacto; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY contacto (id, nombre, apellido, ci, email, telefono, direccion, observacion) FROM stdin;
+2	ricardo                                           	trinidad                                          	4444444	ricardo@hotmail.com	0981-929280	calle corta	Un muy buen profesional                                                                                                                                                                                                                                         
+4	pepito                                            	perez                                             	222222	pepe@abc.com	399938-2	Super Calle	El mejor de todos!.                                                                                                                                                                                                                                             
+5	Monica                                            	Duarte                                            	234234	md@md.com.py	617879	Avenida siempre vivas	Muy buena Depiladora                                                                                                                                                                                                                                            
+6	Lorenzo                                           	Prieto                                            	25441225	lorenzo@gmail.com	125-522	calle sin salida	No trabajo sabado ni domingos                                                                                                                                                                                                                                   
+1	alain                                             	loup                                              	555555	alain@gmail.com	5544-222	Calle sin salida	Un muy buen tipo.                                                                                                                                                                                                                                               
+8	Sylvester                                         	Stallone                                          	2387185	sly@hotmail.com	7890134	Avenida Siemprevivas 110	Nambre                                                                                                                                                                                                                                                          
+7	Lorenzo                                           	Lamas                                             	25441234	lorenzo@gmail.com	125-543	calle sin salida	No trabajo sabado ni domingos                                                                                                                                                                                                                                   
+3	carmelo                                           	camacho                                           	333333	raul@gmail.com	98839-03	calle larga	Muy buena gente.                                                                                                                                                                                                                                                
+\.
+
+
+--
+-- TOC entry 2003 (class 0 OID 66268)
+-- Dependencies: 169
+-- Data for Name: contacto_generico; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY contacto_generico (linea, contacto, tipo, direccion) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2046 (class 0 OID 0)
+-- Dependencies: 170
+-- Name: contacto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('contacto_id_seq', 8, true);
+
+
+--
+-- TOC entry 2005 (class 0 OID 66273)
+-- Dependencies: 171
+-- Data for Name: contacto_servicio; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY contacto_servicio (contacto, servicio) FROM stdin;
+2	3
+2	4
+4	6
+5	10
+6	3
+6	4
+6	9
+6	1
+6	5
+1	3
+1	6
+1	4
+1	2
+1	5
+1	10
+8	7
+8	8
+8	9
+7	3
+7	4
+7	9
+7	1
+7	5
+7	10
+3	3
+3	9
+3	2
+3	5
+\.
+
+
+--
+-- TOC entry 2006 (class 0 OID 66276)
+-- Dependencies: 172
+-- Data for Name: direccion; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY direccion (linea, contacto, direccion, tipo) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2007 (class 0 OID 66279)
+-- Dependencies: 173
+-- Data for Name: documento; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY documento (linea, contacto, tipo, path) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2008 (class 0 OID 66282)
+-- Dependencies: 174
+-- Data for Name: rol; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY rol (id, nombre) FROM stdin;
+1	administrador                                     
+\.
+
+
+--
+-- TOC entry 2047 (class 0 OID 0)
+-- Dependencies: 175
+-- Name: rol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('rol_id_seq', 1, false);
+
+
+--
+-- TOC entry 2010 (class 0 OID 66287)
+-- Dependencies: 176
+-- Data for Name: rubro; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY rubro (id, nombre) FROM stdin;
+2	electricidad                                      
+3	mecanica                                          
+4	carpinteria                                       
+1	Informatica                                       
+5	Plomeria                                          
+6	Belleza                                           
+\.
+
+
+--
+-- TOC entry 2048 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: rubro_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('rubro_id_seq', 6, true);
+
+
+--
+-- TOC entry 2012 (class 0 OID 66292)
+-- Dependencies: 178
+-- Data for Name: servicios; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY servicios (id, servicio, id_rubro) FROM stdin;
+1	programacion php                                  	1
+2	mantenimiento pc                                  	1
+3	electricista                                      	2
+4	chaperia                                          	3
+5	experto en redes                                  	1
+7	pintura                                           	3
+8	tapiceria de autos                                	3
+9	Especialista en Frenos                            	3
+6	electricista junior                               	2
+10	Depilacion                                        	6
+\.
+
+
+--
+-- TOC entry 2049 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: servicios_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('servicios_id_seq', 10, true);
+
+
+--
+-- TOC entry 2014 (class 0 OID 66297)
+-- Dependencies: 180
+-- Data for Name: telefono; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY telefono (linea, contacto, telefono, tipo) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2015 (class 0 OID 66300)
+-- Dependencies: 181
+-- Data for Name: usuario; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY usuario (id, usuario, nombre, apellido, ci, rol, password) FROM stdin;
+5	root                	Jose                                              	Feliciano                                         	2342342	1	63a9f0ea7bb98050796b649e85481845
+4	admin               	Juan                                              	Perez                                             	23282722	1	440576fda8925b32dfbc4ec279cc037c
+\.
+
+
+--
+-- TOC entry 2050 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: usuario_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('usuario_id_seq', 6, true);
+
+
+--
+-- TOC entry 1968 (class 2606 OID 66314)
+-- Name: pk_contacto; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY contacto
+    ADD CONSTRAINT pk_contacto PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1971 (class 2606 OID 66316)
+-- Name: pk_contacto_generico; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY contacto_generico
+    ADD CONSTRAINT pk_contacto_generico PRIMARY KEY (linea, contacto);
+
+
+--
+-- TOC entry 1975 (class 2606 OID 66318)
+-- Name: pk_contacto_servicio; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY contacto_servicio
+    ADD CONSTRAINT pk_contacto_servicio PRIMARY KEY (contacto, servicio);
+
+
+--
+-- TOC entry 1978 (class 2606 OID 66320)
+-- Name: pk_direccion; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY direccion
+    ADD CONSTRAINT pk_direccion PRIMARY KEY (linea, contacto);
+
+
+--
+-- TOC entry 1981 (class 2606 OID 66322)
+-- Name: pk_documento; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY documento
+    ADD CONSTRAINT pk_documento PRIMARY KEY (linea, contacto);
+
+
+--
+-- TOC entry 1983 (class 2606 OID 66324)
+-- Name: pk_rol; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY rol
+    ADD CONSTRAINT pk_rol PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1985 (class 2606 OID 66326)
+-- Name: pk_rubro; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY rubro
+    ADD CONSTRAINT pk_rubro PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1987 (class 2606 OID 66328)
+-- Name: pk_servicios; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY servicios
+    ADD CONSTRAINT pk_servicios PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1990 (class 2606 OID 66330)
+-- Name: pk_telefono; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY telefono
+    ADD CONSTRAINT pk_telefono PRIMARY KEY (linea, contacto);
+
+
+--
+-- TOC entry 1993 (class 2606 OID 66332)
+-- Name: pk_usuario; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY usuario
+    ADD CONSTRAINT pk_usuario PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1969 (class 1259 OID 66333)
+-- Name: idx_contacto_generico; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX idx_contacto_generico ON contacto_generico USING btree (contacto);
+
+
+--
+-- TOC entry 1972 (class 1259 OID 66334)
+-- Name: idx_contacto_servicio; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX idx_contacto_servicio ON contacto_servicio USING btree (servicio);
+
+
+--
+-- TOC entry 1973 (class 1259 OID 66335)
+-- Name: idx_contacto_servicio_0; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX idx_contacto_servicio_0 ON contacto_servicio USING btree (contacto);
+
+
+--
+-- TOC entry 1976 (class 1259 OID 66336)
+-- Name: idx_direccion; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX idx_direccion ON direccion USING btree (contacto);
+
+
+--
+-- TOC entry 1979 (class 1259 OID 66337)
+-- Name: idx_documento; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX idx_documento ON documento USING btree (contacto);
+
+
+--
+-- TOC entry 1988 (class 1259 OID 66338)
+-- Name: idx_telefono; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX idx_telefono ON telefono USING btree (contacto);
+
+
+--
+-- TOC entry 1991 (class 1259 OID 66339)
+-- Name: idx_usuario; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX idx_usuario ON usuario USING btree (rol);
+
+
+--
+-- TOC entry 1994 (class 2606 OID 66340)
+-- Name: fk_contacto_generico_contacto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contacto_generico
+    ADD CONSTRAINT fk_contacto_generico_contacto FOREIGN KEY (contacto) REFERENCES contacto(id);
+
+
+--
+-- TOC entry 1995 (class 2606 OID 66345)
+-- Name: fk_contacto_servicio_contacto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contacto_servicio
+    ADD CONSTRAINT fk_contacto_servicio_contacto FOREIGN KEY (contacto) REFERENCES contacto(id);
+
+
+--
+-- TOC entry 1996 (class 2606 OID 66350)
+-- Name: fk_contacto_servicio_servicios; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contacto_servicio
+    ADD CONSTRAINT fk_contacto_servicio_servicios FOREIGN KEY (servicio) REFERENCES servicios(id);
+
+
+--
+-- TOC entry 1997 (class 2606 OID 66355)
+-- Name: fk_direccion_contacto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY direccion
+    ADD CONSTRAINT fk_direccion_contacto FOREIGN KEY (contacto) REFERENCES contacto(id);
+
+
+--
+-- TOC entry 1998 (class 2606 OID 66360)
+-- Name: fk_documento_contacto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY documento
+    ADD CONSTRAINT fk_documento_contacto FOREIGN KEY (contacto) REFERENCES contacto(id);
+
+
+--
+-- TOC entry 1999 (class 2606 OID 66365)
+-- Name: fk_rubro_servicio; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY servicios
+    ADD CONSTRAINT fk_rubro_servicio FOREIGN KEY (id_rubro) REFERENCES rubro(id);
+
+
+--
+-- TOC entry 2000 (class 2606 OID 66370)
+-- Name: fk_telefono_contacto; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY telefono
+    ADD CONSTRAINT fk_telefono_contacto FOREIGN KEY (contacto) REFERENCES contacto(id);
+
+
+--
+-- TOC entry 2001 (class 2606 OID 66375)
+-- Name: fk_usuario_rol; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY usuario
+    ADD CONSTRAINT fk_usuario_rol FOREIGN KEY (rol) REFERENCES rol(id);
+
+
+--
+-- TOC entry 2023 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2014-01-29 10:22:36
+
+--
+-- PostgreSQL database dump complete
+--
+
