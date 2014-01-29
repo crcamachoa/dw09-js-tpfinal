@@ -27,6 +27,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 		<div class="row">
 			<h3>Contactos</h3>
 		</div>
+<!-- ZONA A! -->
 		<div class="row">
 			<div id="servicioListaContainer" class="col-md-2">
 				<div class="list-group"> 
@@ -34,6 +35,8 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 
 				</div> 
 			</div>
+<!-- FIN DE ZONA A! -->
+<!-- ZONA C! -->
 			<div id="contactoTablaContainer" class="col-md-7">
 				<table id="tableFilter" class="table table-striped table-bordered">
 					<!--                 <table id="tableFilter" class="table table-striped table-hover table-condensed"> -->
@@ -50,7 +53,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 					</tbody>
 				</table>
 			</div>
-
+<!-- FIN de ZONA C! -->
 			<!-- ZONA D! -->
 			<div id="contactoPerfilContainer" class="col-md-3">
 				<div class="row">
