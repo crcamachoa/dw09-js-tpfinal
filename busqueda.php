@@ -38,8 +38,6 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 				<table id="tableFilter" class="table table-striped table-bordered">
 					<!--                 <table id="tableFilter" class="table table-striped table-hover table-condensed"> -->
 					<thead>
-						
-							<th>ID</th>
 							<th>NOMBRE</th>
 							<th>APELLIDO</th>
 							<th>TELEFONO</th>
@@ -145,7 +143,6 @@ var llamarAjaxServicio = function(cualServicio){
 
            		 for (var i = 0; i < servicios.length; i++) {
            		 	tabla+='<tr id="C_'+servicios[i].id+'">"';
-           		 	tabla+="<td>"+servicios[i].id+"</td>";
            		 	tabla+="<td>"+servicios[i].nombre+"</td>";
            		 	tabla+="<td>"+servicios[i].apellido+"</td>";
            		 	tabla+="<td>"+servicios[i].telefono+"</td>";
