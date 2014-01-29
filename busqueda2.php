@@ -220,7 +220,7 @@ $(function () {
 </script>    
 <!-- FIN DEL SCRIPT DE BUSQUEDA -->                    
 <!--Script de paginado-->
-<!--
+
 <script>
 $(document).ready(function() {    
     $('.paginate').live('click', function(){
@@ -241,7 +241,6 @@ $(document).ready(function() {
     });              
 });
 </script>
--->
 <!--Fin de Script de Paginado-->
 </body>
 </html>
