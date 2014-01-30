@@ -27,6 +27,9 @@
 			
 			<div id="contactoTablaContainer" class="col-md-7">
 <!--Zona C-->
+				<input type="text" id="busqueda" class="form-control" placeholder="Busqueda" />
+				<br />
+
 				<table id="tableFilter" class="table table-striped table-bordered">
 					<!--                 <table id="tableFilter" class="table table-striped table-hover table-condensed"> -->
 					<thead>
@@ -134,12 +137,12 @@
 $.ajax(ajaxRequest);
 };
 //llama al ajax de un servicio especifico
-var llamarAjaxServicio = function(cualServicio, offsetActual, limitActual){
+var llamarAjaxServicio = function(cualServicio, offsetActual, limitActual, busquedaActual){
 	var ajaxRequest = {};
 	ajaxRequest.url = "getcontactos.php";
 	ajaxRequest.type = "GET";
 
-	ajaxRequest.data = {servicio : cualServicio, offset : offsetActual, limit : limitActual};
+	ajaxRequest.data = {servicio : cualServicio, offset : offsetActual, limit : limitActual, busqueda : busquedaActual};
 
 	ajaxRequest.success = function(responseJSON) {
    		 // get JSON
@@ -198,14 +201,13 @@ var getServicios= function ()
 	$(this).attr("class", "list-group-item active");
     $('#tableFilter-filtering').val('');
     
-	llamarAjaxServicio($(this).attr("id"), 0, 3);
+	llamarAjaxServicio($(this).attr("id"), 0, 3, "");
 };
 
 //para que se popule con todos los servicios al iniciar
 var cambiarPagina = function()
 {
-	//alert($(this).attr('data-offset'));
-	llamarAjaxServicio("todos", $(this).attr('data-offset'), $(this).attr('data-limit'));
+	llamarAjaxServicio($("a.active").attr("id"), $(this).attr('data-offset'), $(this).attr('data-limit'), $("#busqueda").val());
 	//llamarAjaxServicio("todos",3,3);
     $('#contactoPerfilContainer').hide();
 
@@ -215,9 +217,24 @@ var cambiarPagina = function()
 var getServiciosOnLoad= function ()
 {
 
-	llamarAjaxServicio("todos", 0, 3);
+	llamarAjaxServicio("todos", 0, 3, "");
     $('#contactoPerfilContainer').hide();
 
+    var consulta;
+                                                                          
+	//hacemos focus al campo de búsqueda
+	$("#busqueda").focus();
+                                                                                                    
+	//comprobamos si se pulsa una tecla
+	$("#busqueda").keyup(function(e){
+                                     
+		//obtenemos el texto introducido en el campo de búsqueda
+		consulta = $("#busqueda").val();
+                                                                           
+        //hace la búsqueda
+        llamarAjaxServicio($("a.active").attr("id"), 0, 3, consulta);                                                              
+                                                                           
+    });
 };
 
 $.ajax({
@@ -242,14 +259,6 @@ $.ajax({
 
 $(document).ready(getServiciosOnLoad);
 </script>
-<!-- SCRIPT PARA EL FILTRO DE BUSQUEDA -->            
-<script type="text/javascript">
-$(function () {
-	$("#tableFilter").addTableFilter();
-});
-</script>    
-<!-- FIN DEL SCRIPT DE BUSQUEDA --> 
-               
 
 </body>
 </html>

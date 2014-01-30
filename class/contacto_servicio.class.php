@@ -4,7 +4,6 @@ class Contacto_servicio {
 	private $dbh;
 	private $rowPage;
 	private function __construct() {
-		$rowPage = 3;
 		try {
 			$this->open_conection();
 			$this->dbh->exec ( "SET CHARACTER SET utf8" );
@@ -21,6 +20,7 @@ class Contacto_servicio {
 	private function open_conection(){
 		include "/bd.php";
 		$this->dbh = new PDO ( "pgsql:dbname=$dbname;host=$host;user=$user;password=$password" );
+		$this->rowPage = $rowPerPage;
 	}
 	private function close_conection(){
 		$this->dbh = null;
@@ -74,36 +74,236 @@ class Contacto_servicio {
 			$e->getMessage ();
 		}
 	}
-	public function getContactosPorServicio($servicio) {
+	public function getContactosPorServicio($servicio, $offset, $limit, $busqueda) {
+		if($offset == 0){
+            $_SESSION["actual"] = 1;
+        }else{
+            $_SESSION["actual"] = ($offset/$limit) + 1;
+        }
+        $_SESSION["limit"] = $limit;
+        $bindBusqueda = '%'.$busqueda.'%';
 		try {
-			
 			if($servicio != "todos")
-            {        
-                $sql = "select distinct (con.id), con.nombre, con.apellido, con.ci, con.email, 
+            {   if ( $busqueda == "" ){
+	                $sql = "select distinct (con.id), con.nombre, con.apellido, con.ci, con.email, 
+	                    con.telefono, con.direccion, con.observacion, ser.servicio 
+	                    from contacto con 
+	                        join contacto_servicio conser on con.id = conser.contacto 
+	                        join servicios ser on conser.servicio = ser.id 
+	                        join rubro ru on ser.id_rubro = ru.id 
+	                    where ser.id = ?
+	                    limit ? 
+	                    offset ?" ;
+	                $query = $this->dbh->prepare ( $sql );
+	                $query->bindParam(1, $servicio );
+	                $query->bindParam(2, $limit); 
+	            	$query->bindParam(3, $offset);
+	            }else{
+	            	$sql = "select distinct (con.id), con.nombre, con.apellido, con.ci, con.email, 
                     con.telefono, con.direccion, con.observacion, ser.servicio 
                     from contacto con 
                         join contacto_servicio conser on con.id = conser.contacto 
                         join servicios ser on conser.servicio = ser.id 
-                        join rubro ru on ser.id_rubro = ru.id where ser.id = $servicio" ;
-                //$query = $this->dbh->prepare ( $sql );
-                //$query->bindParam ( 1, $servicio );
+                        join rubro ru on ser.id_rubro = ru.id 
+                    where ser.id = ? 
+                    	and (con.id || ' ' || con.nombre  || ' ' || con.apellido 
+                    	 || ' ' ||  con.telefono  || ' ' || con.email  || ' ' ||  ru.nombre) like ?
+                    limit ? 
+                    offset ?" ;
+	                $query = $this->dbh->prepare ( $sql );
+	                $query->bindParam(1, $servicio );
+	                $query->bindParam(2, $bindBusqueda );
+	                $query->bindParam(3, $limit); 
+	            	$query->bindParam(4, $offset);
+	            }
             }
             else{
-                $sql = 'select distinct (con.id), con.nombre, con.apellido, con.ci, con.email,
-                    con.telefono, con.direccion, con.observacion, ser.servicio 
-                    from contacto con 
-                        join contacto_servicio conser on con.id = conser.contacto 
-                        join servicios ser on conser.servicio = ser.id 
-                        join rubro ru on ser.id_rubro = ru.id' ;
-                //$query = $this->dbh->prepare ( $sql );
+            	if ( $busqueda == "" ){
+	                $sql = "select distinct (con.id), con.nombre, con.apellido, con.ci, con.email,
+	                    con.telefono, con.direccion, con.observacion, ser.servicio 
+	                    from contacto con 
+	                        join contacto_servicio conser on con.id = conser.contacto 
+	                        join servicios ser on conser.servicio = ser.id 
+	                        join rubro ru on ser.id_rubro = ru.id
+	                    limit ?
+	                    offset ?" ;
+	                $query = $this->dbh->prepare ( $sql );
+	                $query->bindParam(1, $limit); 
+	            	$query->bindParam(2, $offset);
+            	}else{
+	            	$sql = "select distinct (con.id), con.nombre, con.apellido, con.ci, con.email,
+	                    con.telefono, con.direccion, con.observacion, ser.servicio 
+	                    from contacto con 
+	                        join contacto_servicio conser on con.id = conser.contacto 
+	                        join servicios ser on conser.servicio = ser.id 
+	                        join rubro ru on ser.id_rubro = ru.id
+                    where (con.id || ' ' || con.nombre  || ' ' || con.apellido 
+                    	 || ' ' ||  con.telefono  || ' ' || con.email  || ' ' ||  ru.nombre) like ?
+                    limit ?
+                    offset ?" ;
+	                $query = $this->dbh->prepare ( $sql );
+	                $query->bindParam(1, $bindBusqueda);
+	                $query->bindParam(2, $limit );
+	                $query->bindParam(3, $offset); 
+	            }
             }
-            $query = $this->dbh->prepare ( $sql );
 			$query->execute ();
-			return $query->fetchAll ();
+
+			// if($query->rowCount() > 0)
+   //          {
+				return $query->fetchAll ();
+			// }
 		} catch ( PDOException $e ) {
 			$e->getMessage ();
 		}
 	}
+	
+	//obtenemos el número de posts totales
+    public function get_all_contacto_servicio($servicio, $busqueda)
+    {
+         $bindBusqueda = '%'.$busqueda.'%';
+         try {
+         	if($servicio != "todos")
+            {
+            	if ( $busqueda == "" ){ 
+                    $sql = "select count(1)
+                        from contacto con 
+                            join contacto_servicio conser on con.id = conser.contacto 
+                            join servicios ser on conser.servicio = ser.id 
+                            join rubro ru on ser.id_rubro = ru.id
+                        where ser.id = ?";
+                    $query = $this->dbh->prepare($sql);
+                    $query->bindParam(1, $servicio );
+                }else{
+                    $sql = "select count(1)
+                        from contacto con 
+                            join contacto_servicio conser on con.id = conser.contacto 
+                            join servicios ser on conser.servicio = ser.id 
+                            join rubro ru on ser.id_rubro = ru.id
+                        where ser.id = ?
+                            and (con.id || ' ' || con.nombre  || ' ' || con.apellido 
+                    	     || ' ' ||  con.telefono  || ' ' || con.email  || ' ' ||  ru.nombre) like ?";
+                    $query = $this->dbh->prepare($sql);
+                    $query->bindParam(1, $servicio );
+                    $query->bindParam(2, $bindBusqueda );
+                }
+            }else{
+                if ( $busqueda == "" ){
+                    $sql = "select count(1)
+                        from contacto con 
+                            join contacto_servicio conser on con.id = conser.contacto 
+                            join servicios ser on conser.servicio = ser.id 
+                            join rubro ru on ser.id_rubro = ru.id";
+                    $query = $this->dbh->prepare($sql);
+                }else{
+                    $sql = "select count(1)
+                        from contacto con 
+                            join contacto_servicio conser on con.id = conser.contacto 
+                            join servicios ser on conser.servicio = ser.id 
+                            join rubro ru on ser.id_rubro = ru.id
+                        where (con.id || ' ' || con.nombre  || ' ' || con.apellido 
+                    	     || ' ' ||  con.telefono  || ' ' || con.email  || ' ' ||  ru.nombre) like ?";
+                    $query = $this->dbh->prepare($sql);
+                    $query->bindParam(1, $bindBusqueda );
+                }
+            }
+            
+            $query->execute();
+
+            //si es true
+            // if($query->rowCount() == 1)
+            // {
+                return $query->fetchColumn();
+            // }
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+        }      
+    }
+
+    //creamos los enlaces de nuestra paginación
+    public function crea_links($servicio, $busqueda)
+    {
+
+        //html para retornar
+        $html = "";
+
+        //página actual
+        $actual_pag = $_SESSION["actual"];
+
+        //limite por página
+        $limit = $_SESSION["limit"];
+
+        //total de enlaces que existen
+        $totalPag = ceil($this->get_all_contacto_servicio($servicio, $busqueda) / $limit);
+
+        //links delante y detrás que queremos mostrar
+        $pagVisibles = 2;
+
+        if($actual_pag <= $pagVisibles)
+        {
+            $primera_pag = 1;   
+        }else{
+            $primera_pag = $actual_pag - $pagVisibles; 
+        }
+
+        if($actual_pag + $pagVisibles <= $totalPag)
+        {
+            $ultima_pag = $actual_pag + $pagVisibles;
+        }else{
+            $ultima_pag = $totalPag;
+        }
+					
+
+        $html .= '<ul class="pagination">';
+        $html .= ($actual_pag > 1) ? 
+        ' <li><a href="#"  data-offset="0" data-limit="'.$limit.'" >first</a> </li>' : 
+        ' <li class="disabled"><a href="#">first</a> </li>';
+        $html .= ($actual_pag > 1) ? 
+        ' <li><a href="#" data-offset="'.(($actual_pag-1) * $limit).'" data-limit="'.$limit.'" >back</a> </li>' : 
+        ' <li class="disabled"><a href="#">back</a> </li>';
+         
+        for($i=$primera_pag; $i<=$ultima_pag; $i++) 
+        {
+            $html .= ($i == $actual_pag) ? 
+            ' <li class="active"><a href="#">'.$i.'</a> </li>' : 
+            ' <li><a href="#" data-offset="'.(($i-1)*$limit).'" data-limit="'.$limit.'" >'.$i.'</a> </li>';
+        }
+         
+        $html .= ($actual_pag < $totalPag) ? 
+        ' <li><a href="#" data-offset="'.(($actual_pag)*$limit).'" data-limit="'.$limit.'" >next</a> </li>' : 
+        ' <li class="disabled"><a href="#">next</a> </li>';
+        $html .= ($actual_pag < $totalPag) ? 
+        ' <li><a href="#" data-offset="'.(($totalPag-1)*$limit).'" data-limit="'.$limit.'" >last</a> </li>' : 
+        ' <li class="disabled"><a href="#">last</a> </li>';
+
+
+        // $html .= ($actual_pag > 1) ? 
+        // ' <li><a href="#" class="button round" onclick="paginarContactos('.$servicio.',0,'.$limit.')">Primera</a> </li>' : 
+        // ' <li><a href="#" class="button round disabled">Primera</a> </li>';
+        // $html .= ($actual_pag > 1) ? 
+        // ' <li><a href="#" class="button round" onclick="paginarContactos('.$servicio.','.(($actual_pag-1)*$limit).','.$limit.')">Anterior</a> </li>' : 
+        // ' <li><a href="#" class="button round disabled">Anterior</a> </li>';
+         
+        // for($i=$primera_pag; $i<=$ultima_pag; $i++) 
+        // {
+        //     $html .= ($i == $actual_pag) ? 
+        //     ' <li><a class="button secondary round disabled" href="#">'.$i.'</a> </li>' : 
+        //     ' <li><a class="button round" href="#" onclick="paginarContactos('.$servicio.','.(($i)*$limit).','.$limit.')">'.$i.'</a> </li>';
+        // }
+         
+        // $html .= ($actual_pag < $totalPag) ? 
+        // ' <li><a href="#" class="button round" onclick="paginarContactos('.$servicio.','.(($actual_pag+1)*$limit).','.$limit.')">Siguiente</a> </li>' : 
+        // ' <li><a href="#" class="button round disabled">Siguiente</a> </li>';
+        // $html .= ($actual_pag < $totalPag) ? 
+        // ' <li><a href="#" class="button round" onclick="paginarContactos('.$servicio.','.(($totalPag)*$limit).','.$limit.')">Última</a> </li>' : 
+        // ' <li><a href="#" class="button round disabled">Última</a> </li>';
+        $html .= '</ul>';
+
+        return $html;
+
+    }
+
+
 	public function __clone() {
 		trigger_error ( 'La clonacion no es permitida!.', E_USER_ERROR );
 	}
