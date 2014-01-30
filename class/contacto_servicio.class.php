@@ -78,7 +78,7 @@ class Contacto_servicio {
 		if($offset == 0){
             $_SESSION["actual"] = 1;
         }else{
-            $_SESSION["actual"] = ($offset/$this->rowPage;) + 1;
+            $_SESSION["actual"] = ($offset/$this->rowPage) + 1;
         }
         $bindBusqueda = '%'.$busqueda.'%';
 		try {
