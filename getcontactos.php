@@ -1,4 +1,5 @@
 <?php
+    require_once "bd.php";
     require_once "class/contacto_servicio.class.php";
     $contactos = Contacto_servicio::singleton();
 
@@ -6,7 +7,7 @@
 	header("Content-type: application/json");
     
     //comprobamos si han llegado las variables get para setearlas
-    $limit = !isset($_GET["limit"]) || $_GET["limit"] == "undefined" ? 3 : $_GET["limit"];
+    $limit = !isset($_GET["limit"]) || $_GET["limit"] == "undefined" || $_GET["limit"] == 0 ? $rowPerPage : $_GET["limit"];
     $offset = !isset($_GET["offset"]) || $_GET["offset"] == "undefined" ? 0 : $_GET["offset"];
     $servicio = !isset($_GET["servicio"]) || $_GET["servicio"] == "undefined" ? "todos" : $_GET["servicio"];
     $busqueda = !isset($_GET["busqueda"]) || $_GET["busqueda"] == "undefined" ? "" : $_GET["busqueda"];

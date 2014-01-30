@@ -2,12 +2,10 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta charset="utf-8">
 	<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="js/jquery.js"></script> 
 	<script type="text/javascript" src="js/bootstrap.js"></script>
 </head>
-
 <body>
 	<?php include 'menu.php'; ?>
 	<div class="container">
@@ -15,22 +13,21 @@
 		<div class="row">
 			<h3>Contactos</h3>
 		</div>
+<!-- ZONA A! -->
 		<div class="row">
-<!-- Zona A-->
 			<div id="servicioListaContainer" class="col-md-2">
 				<div class="list-group"> 
-
-
+					<!-- Trae la lista de Servicios utilizando  -->
 				</div> 
 			</div>
-<!--Fin Zona A-->
-			
+<!-- FIN DE ZONA A! -->
+<!-- ZONA C! -->
 			<div id="contactoTablaContainer" class="col-md-7">
-<!--Zona C-->
+				<!-- input para filtro de la tabla -->
 				<input type="text" id="busqueda" class="form-control" placeholder="Busqueda" />
 				<br />
 
-				<table id="tableFilter" class="table table-striped table-bordered">
+				<table id="tableFilter" class="table table-striped table-bordered table-hover">
 					<!--                 <table id="tableFilter" class="table table-striped table-hover table-condensed"> -->
 					<thead>
 						
@@ -42,11 +39,12 @@
 							<th>SERVICIO</th>
 						
 					</thead>
-					<tbody class="tbody">
+					<tbody class="tbody"> <!-- Aqui se carga los datos de la Zona C via ajax-->
 
 					</tbody>
 				</table>
 				<!-- Inicio - Paginacion -->
+				<!-- Aqui se carga la paginación -->
 				<div id="contactoPaginacion">
 					
 				</div>
@@ -60,7 +58,7 @@
 <!--					<div class="col-sm-6 col-md-6">-->
 						<div class="thumbnail">
 							<!-- Acá se cargan las imagenes -->
-							<img id="pulgarcito" src="" alt="...">
+							<img id="pulgarcito" src="" alt="..."><!-- src se completa mediante la funcion getPersona --> 
 							<div class="caption">
 								<h3>Datos de Contacto</h3>
                                 <table>
@@ -136,7 +134,7 @@
 		};
 $.ajax(ajaxRequest);
 };
-//llama al ajax de un servicio especifico
+//llama al ajax para rellenar la zona C (tabla de contactos)
 var llamarAjaxServicio = function(cualServicio, offsetActual, limitActual, busquedaActual){
 	var ajaxRequest = {};
 	ajaxRequest.url = "getcontactos.php";
@@ -161,38 +159,26 @@ var llamarAjaxServicio = function(cualServicio, offsetActual, limitActual, busqu
    		 	tabla+="</tr>";
    		 };
 
+   		// Cargar contactos en la tabla
    		$("tbody.tbody").html("");
-   		$("tbody.tbody").html(tabla);
-		//Para colorear lo que se clickea
-		$("tbody tr").css('cursor','pointer');
-
-		$("tbody tr").on("click", getPersona);
+   		$(".tbody").html(tabla);
+		$(".tbody tr").css('cursor','pointer'); 
+		// Al hacer click en la linea de la tabla se carga la zona D (Info de un contacto)
+		$(".tbody tr").on("click", getPersona);
 
 		// Paginacion
 		//cargamos los links en el ul #contactoPaginacion
 		$("#contactoPaginacion").html("");
+		//Los paginas con se calculan en la clase php, devuelve todo el html
 		$("#contactoPaginacion").html(servicios.links);
-
+		// Modifica el html de paginas para recargar al cambiar de pagina
 		$("#contactoPaginacion li a").on("click", cambiarPagina)
-
-		//hacemos una sencilla animacion
-		// $(document.body).animate({opacity: 0.3}, 400);
-	 //    $("html, body").animate({ scrollTop: 0 }, 400);
-	 //    $(document.body).animate({opacity: 1}, 400);
-
-		// var paginado = "";
-		// for (var i = 1; i <= 3; i++) {
-		// 	paginado += '<li class="pag"><a data-page="'+i+'">'+i+'</a></li>';
-		// }
-		// $("#contactoPaginacion").html(paginado);
-		// $("li.pag").css('cursor','pointer');
-		// $("li.pag").on("click", cambiarPagina)
 	};
 	$.ajax(ajaxRequest);
 };
 
 //para traiga los servicios del que se clicko
-var getServicios= function ()
+var getContactos= function ()
 {
      $('#contactoPerfilContainer').hide(); // oculta la zona D
     
@@ -201,7 +187,10 @@ var getServicios= function ()
 	$(this).attr("class", "list-group-item active");
     $('#tableFilter-filtering').val('');
     
-	llamarAjaxServicio($(this).attr("id"), 0, 3, "");
+    //Limpiar el input de filtro cada vez que se selecciona un servicio
+    $("#busqueda").val('');
+    // Recargar la tabla de contactos, por el Servicio que se hizo el click, pagina 1, sin filtro
+	llamarAjaxServicio($(this).attr("id"), 0, 0, "");
 };
 
 //para que se popule con todos los servicios al iniciar
@@ -214,10 +203,10 @@ var cambiarPagina = function()
 };
 
 //para que se popule con todos los servicios al iniciar
-var getServiciosOnLoad= function ()
+var getContactosOnLoad= function ()
 {
-
-	llamarAjaxServicio("todos", 0, 3, "");
+	// Cargar todos los contactos en la tabla
+	llamarAjaxServicio("todos", 0, 0, "");
     $('#contactoPerfilContainer').hide();
 
     var consulta;
@@ -232,12 +221,12 @@ var getServiciosOnLoad= function ()
 		consulta = $("#busqueda").val();
                                                                            
         //hace la búsqueda
-        llamarAjaxServicio($("a.active").attr("id"), 0, 3, consulta);                                                              
+        llamarAjaxServicio($("a.active").attr("id"), 0, 0, consulta);                                                              
                                                                            
     });
 };
 
-$.ajax({
+$.ajax({ //Se cargar los Servicios al cargarse la pagina
 	url: 'serviciosListar.php',
 	dataType: 'json',
 	success: function(serviciosList){
@@ -250,14 +239,14 @@ $.ajax({
 
 		//Para completar la zona A
 		$('.list-group').html(servicioListHtml);
-		//Para que se llame a getservicios cada vez que se clickea en la zona A
-		$('a.list-group-item').on("click",getServicios);
+		//Para que se llame a getContactos cada vez que se clickea en la zona A
+		$('a.list-group-item').on("click",getContactos);
 		//para mostrar el puntero
 		$('a.list-group-item').css("cursor","pointer");
 	}
 });
 
-$(document).ready(getServiciosOnLoad);
+$(document).ready(getContactosOnLoad);
 </script>
 
 </body>

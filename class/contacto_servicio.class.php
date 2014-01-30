@@ -259,7 +259,7 @@ class Contacto_servicio {
         ' <li><a href="#"  data-offset="0" data-limit="'.$limit.'" >first</a> </li>' : 
         ' <li class="disabled"><a href="#">first</a> </li>';
         $html .= ($actual_pag > 1) ? 
-        ' <li><a href="#" data-offset="'.(($actual_pag-1) * $limit).'" data-limit="'.$limit.'" >back</a> </li>' : 
+        ' <li><a href="#" data-offset="'.(($actual_pag-2) * $limit).'" data-limit="'.$limit.'" >back</a> </li>' : 
         ' <li class="disabled"><a href="#">back</a> </li>';
          
         for($i=$primera_pag; $i<=$ultima_pag; $i++) 
