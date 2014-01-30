@@ -1,25 +1,11 @@
-<?php
-require_once 'class/contacto.class.php';
-$contactos = Contacto::singleton();
-$data = $contactos->get_contactos();
-
-$rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<!-- 	<link   href="css/bootstrap.min.css" rel="stylesheet"> -->
-	<!-- 	<script src="js/bootstrap.min.js"></script> -->
-	<!-- 	<script type="text/javascript" src="js/jquery.js"></script> -->
-	<meta charset="utf-8">
 	<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript" src="js/jquery.js"></script> 
-	<script type="text/javascript" src="js/jquery-1.10.1.js"></script>
 	<script type="text/javascript" src="js/bootstrap.js"></script>
-
 </head>
-
 <body>
 	<?php include 'menu.php'; ?>
 	<div class="container">
@@ -31,8 +17,7 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 		<div class="row">
 			<div id="servicioListaContainer" class="col-md-2">
 				<div class="list-group"> 
-
-
+                    <!-- Trae la lista de Servicios utilizando  -->
 				</div> 
 			</div>
 <!-- FIN DE ZONA A! -->
@@ -45,10 +30,9 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 							<th>APELLIDO</th>
 							<th>TELEFONO</th>
 							<th>EMAIL</th>
-							<th>SERVICIO</th>
-						
+							<th>SERVICIO</th>		
 					</thead>
-					<tbody class="tbody">
+					<tbody class="tbody"> <!-- Aqui se carga los datos de la Zona C via ajax-->
 
 					</tbody>
 				</table>
@@ -57,10 +41,9 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 			<!-- ZONA D! -->
 			<div id="contactoPerfilContainer" class="col-md-3">
 				<div class="row">
-<!--					<div class="col-sm-6 col-md-6">-->
 						<div class="thumbnail">
 							<!-- Acá se cargan las imagenes -->
-							<img id="pulgarcito" src="" alt="...">
+							<img id="pulgarcito" src="" alt="..."> <!-- src se completa mediante la funcion getPersona --> 
 							<div class="caption">
 								<h3>Datos de Contacto</h3>
                                 <table>
@@ -88,7 +71,6 @@ $rec_limit = $contactos->getRowPage(); //obtener lineas por pagina
 
 							</div>
 						</div>
-<!--					</div>-->
 				</div>
 			</div>
 			<!-- FIN DE ZONA D! -->
@@ -141,30 +123,30 @@ var llamarAjaxServicio = function(cualServicio){
 
 	ajaxRequest.success = function(responseJSON) {
            		 // get JSON
-           		 var servicios = responseJSON;
+           		 var contactos = responseJSON;
            		 var tabla=""; 
 
-           		 for (var i = 0; i < servicios.length; i++) {
-           		 	tabla+='<tr id="C_'+servicios[i].id+'">"';
-           		 	tabla+="<td>"+servicios[i].nombre+"</td>";
-           		 	tabla+="<td>"+servicios[i].apellido+"</td>";
-           		 	tabla+="<td>"+servicios[i].telefono+"</td>";
-           		 	tabla+="<td>"+servicios[i].email+"</td>";
-           		 	tabla+="<td>"+servicios[i].servicio+"</td>";
+           		 for (var i = 0; i < contactos.length; i++) {
+           		 	tabla+='<tr id="C_'+contactos[i].id+'">"';
+           		 	tabla+="<td>"+contactos[i].nombre+"</td>";
+           		 	tabla+="<td>"+contactos[i].apellido+"</td>";
+           		 	tabla+="<td>"+contactos[i].telefono+"</td>";
+           		 	tabla+="<td>"+contactos[i].email+"</td>";
+           		 	tabla+="<td>"+contactos[i].servicio+"</td>";
            		 	tabla+="</tr>";
            		 };
 
-           		 $("tbody.tbody").html(tabla);
-				//Para colorear lo que se clickea
-				$("tbody tr").css('cursor','pointer');
+           		 $(".tbody").html(tabla);
+				//Para cambiar el cursor
+				$(".tbody tr").css('cursor','pointer'); 
 
-				$("tbody tr").on("click", getPersona);
+				$(".tbody tr").on("click", getPersona);
 
 			};
 			$.ajax(ajaxRequest);
 		};
 		//para traiga los servicios del que se clicko
-		var getServicios= function ()
+		var getContactos= function ()
 		{
             
              $('#contactoPerfilContainer').hide(); // oculta la zona D
@@ -183,7 +165,7 @@ var llamarAjaxServicio = function(cualServicio){
 		};
 
 //para que se popule con todos los servicios al iniciar
-var getServiciosOnLoad= function ()
+var getContactosOnLoad= function ()
 {
 
 	llamarAjaxServicio("todos");
@@ -191,7 +173,7 @@ var getServiciosOnLoad= function ()
 
 };
 
-$.ajax({
+$.ajax({  //Se cargar los Servicios al cargarse la pagina
 	url: 'serviciosListar.php',
 	dataType: 'json',
 	success: function(serviciosList){
@@ -205,13 +187,13 @@ $.ajax({
 		//Para completar la zona A
 		$('.list-group').html(servicioListHtml);
 		//Para que se llame a getservicios cada vez que se clickea en la zona A
-		$('a.list-group-item').on("click",getServicios);
+		$('a.list-group-item').on("click",getContactos);
 		//para mostrar el puntero
 		$('a.list-group-item').css("cursor","pointer");
 	}
 }
 );
-$(document).ready(getServiciosOnLoad);
+$(document).ready(getContactosOnLoad);
 </script>
 <!-- SCRIPT PARA EL FILTRO DE BUSQUEDA -->            
 <script src="js/jquery.table-filter.js"></script>
