@@ -135,12 +135,12 @@
 $.ajax(ajaxRequest);
 };
 //llama al ajax para rellenar la zona C (tabla de contactos)
-var llamarAjaxServicio = function(cualServicio, offsetActual, limitActual, busquedaActual){
+var llamarAjaxServicio = function(cualServicio, offsetActual, busquedaActual){
 	var ajaxRequest = {};
 	ajaxRequest.url = "getcontactos.php";
 	ajaxRequest.type = "GET";
 
-	ajaxRequest.data = {servicio : cualServicio, offset : offsetActual, limit : limitActual, busqueda : busquedaActual};
+	ajaxRequest.data = {servicio : cualServicio, offset : offsetActual, busqueda : busquedaActual};
 
 	ajaxRequest.success = function(responseJSON) {
    		 // get JSON
@@ -189,14 +189,14 @@ var getContactos= function ()
     
     //Limpiar el input de filtro cada vez que se selecciona un servicio
     $("#busqueda").val('');
-    // Recargar la tabla de contactos, por el Servicio que se hizo el click, pagina 1, sin filtro
-	llamarAjaxServicio($(this).attr("id"), 0, 0, "");
+    // Recargar la tabla de contactos, por el Servicio que se hizo el click, pagina 1(offset 0), sin filtro
+	llamarAjaxServicio($(this).attr("id"), 0, "");
 };
 
 //para que se popule con todos los servicios al iniciar
 var cambiarPagina = function()
 {
-	llamarAjaxServicio($("a.active").attr("id"), $(this).attr('data-offset'), $(this).attr('data-limit'), $("#busqueda").val());
+	llamarAjaxServicio($("a.active").attr("id"), $(this).attr('data-offset'), $("#busqueda").val());
 	//llamarAjaxServicio("todos",3,3);
     $('#contactoPerfilContainer').hide();
 
@@ -221,7 +221,7 @@ var getContactosOnLoad= function ()
 		consulta = $("#busqueda").val();
                                                                            
         //hace la búsqueda
-        llamarAjaxServicio($("a.active").attr("id"), 0, 0, consulta);                                                              
+        llamarAjaxServicio($("a.active").attr("id"), 0, consulta);                                                              
                                                                            
     });
 };
